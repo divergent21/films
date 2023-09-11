@@ -1,0 +1,17 @@
+{
+    "name": "divergent/films",
+    "description": "The Films web application",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "Divergent\\Films\\": "."
+        }
+    },
+    "authors": [
+        {
+            "name": "divergent21",
+            "email": "zakharchenkody@gmail.com"
+        }
+    ],
+    "require": {}
+}
