@@ -9,6 +9,27 @@
         </div>
     </section>
 
+    <div class="container">
+        <div class="row">
+            <label>Sort order</label>
+            <div class="col-2">
+                <form action="/films" method="GET" class="row">
+                    <div class="col-auto">
+                        <select name="sort" class="form-control form-select mb-2">
+                            <option <?= $_GET['sort'] === 'ASC' ? 'selected' : '' ?> value="ASC">A-Z</option>
+                            <option <?= $_GET['sort'] === 'DESC' ? 'selected' : '' ?> value="DESC">Z-A</option>
+                        </select>
+                    </div>
+                    
+
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-outline-secondary">Show</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <div class="album py-5 bg-light">
         <div class="container">
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">

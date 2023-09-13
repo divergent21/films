@@ -11,7 +11,7 @@ final class ActorsController {
 
     public static function index () {
         $actors = Actor::paginate()
-            ->order_by('title')
+            ->order_by('last_name')
             ->get();
         
         $title = 'Actors';
@@ -68,7 +68,7 @@ final class ActorsController {
 
         foreach (FilmToActor::where([
             'actor_id' => $actor->id
-        ]) as $to_delete) {
+        ])->get() as $to_delete) {
             $to_delete->delete();
         }
 

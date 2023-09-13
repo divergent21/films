@@ -6,6 +6,8 @@
     <?php endforeach; ?>
 </div>
 
+<a href="/admin/films/create" class="btn btn-outline-primary mt-4">Create</a>
+
 <?= \Divergent\Films\Models\Film::render_pagination(); ?>
 
 <?php require_once MAIN_DIR . '/templates/admin/footer.php';

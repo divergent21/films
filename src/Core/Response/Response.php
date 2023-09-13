@@ -172,13 +172,13 @@ final class Response {
      */
     public function redirect (string $url, int $code = 302): void {
         // Check URL
-        $url = new URL($url);
+        $_url = new URL($url);
 
         // Check code
         $this->code($code);
 
         // set location
-        header('Location: ' . $url->get_url(), true, $this->code());
+        header('Location: ' . $url, true, $this->code());
 
         exit;
     }

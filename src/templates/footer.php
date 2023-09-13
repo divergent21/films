@@ -1,10 +1,6 @@
     <footer class="text-muted py-5">
         <div class="container">
-            <p class="float-end mb-1">
-            <a href="#">Link </a>
-            </p>
-            <p class="mb-1">Text</p>
-            <p class="mb-0">short <a href="/">Films</a> add.</p>
+            <p class="mb-1">Films hosting #1</p>
         </div>
     </footer>
     

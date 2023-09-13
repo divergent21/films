@@ -122,14 +122,15 @@
 <body>
 
     <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
-        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">Admin | Films</a>
+        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="/">Admin | Films</a>
         <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="navbar-nav">
             <div class="nav-item text-nowrap">
-                <a class="nav-link px-3" href="/logout">Sign out</a>
+                <a class="nav-link px-3 d-inline" href="/logout">Sign out</a>
+                <a href="/" class="nav-link px-3 d-inline">Site</a>
             </div>
         </div>
     </header>
@@ -140,3 +141,13 @@
 
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 pt-4">
                 <h2><?= isset($title) ? $title : 'Admin' ?></h2>
+
+                <?php if (isset($_SESSION['error'])): ?>
+                    <div class="alert alert-danger mt-4 mb-4"><?= $_SESSION['error'] ?></div>
+                    <?php unset($_SESSION['error']); ?>
+                <?php endif; ?>
+
+                <?php if (isset($_SESSION['success'])): ?>
+                    <div class="alert alert-success mt-4 mb-4"><?= $_SESSION['success'] ?></div>
+                    <?php unset($_SESSION['success']); ?>
+                <?php endif; ?>

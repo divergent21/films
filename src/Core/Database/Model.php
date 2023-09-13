@@ -42,7 +42,7 @@ abstract class Model {
      * 
      * @return string Table name
      */
-    private static function table_name (): string {
+    protected static function table_name (): string {
         if (empty(static::$table_name)) {
             return preg_replace('#^.+\\\\(.+?)$#si', '$1', static::class) . 's';
         }
@@ -226,7 +226,7 @@ abstract class Model {
         $next_page = [
             'title' => 'Next',
             // If the next page available - link or #
-            'url' => $page === count($pages) ? '#' : $pages[count($pages)]['url'],
+            'url' => $page === count($pages) ? '#' : $pages[$page + 1]['url'],
             'active' => false, // Always false
             // If the next page not available - disabling the link
             'disabled' => $page === count($pages)

@@ -38,6 +38,15 @@ final class AuthController {
     }
 
     /**
+     * Logout
+     */
+    public static function logout () {
+        Auth::logout();
+
+        (new Response)->redirect('/');
+    }
+
+    /**
      * Checking Auth.
      * 
      * Can be modified to load the data from DB.

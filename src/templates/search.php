@@ -11,10 +11,11 @@
                     id="exampleDataList" 
                     placeholder="Type to search..."
                     value="<?= $query ?? '' ?: '' ?>"
+                    required
                 >
             </div>
             <div class="col-2">
-                <select name="stype" class="form-select">
+                <select name="stype" class="form-select" required>
                     <?php 
                     $stype = $_GET['stype'] ?? '';
                     ?>

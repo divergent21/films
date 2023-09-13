@@ -28,6 +28,11 @@ final class AdminController {
 
         $data = self::parse_import_file($_FILES['import_file']['tmp_name']);
 
+        if (empty($data)) {
+            return (new Response)->with(['error' => 'File cannot be empty.'])
+                ->redirect('/admin/import_films');
+        }
+
         foreach ($data as $film_data) {
             $film_format_fixed = match (strtoupper($film_data['Format'])) {
                 'BLU-RAY' => 'Blu-ray', // to one format
@@ -36,24 +41,30 @@ final class AdminController {
             };
 
             $prepared_film_params = [
-                'title' => $film_data['Title'],
-                'since' => $film_data['Release Year'] . '-01-01',
+                'title' => strip_tags($film_data['Title']),
+                'since' => strip_tags($film_data['Release Year']) . '-01-01',
                 'format' => $film_format_fixed
             ];
 
-            $already_films = Film::where($prepared_film_params)->get();
+            $already_films = Film::where([
+                'title' => $prepared_film_params['title']
+            ])->get();
 
             if (empty($already_films)) {
                 $film_id = Film::create($prepared_film_params);
             } else {
-                $film_id = $already_films[0]->id;
+                (new Response)->with(['error' => 'Film with "' . $prepared_film_params['title'] . '" title is already exists.'])
+                    ->redirect('/admin/import_films');
             }
 
             foreach ($film_data['Stars'] as $actor_data) {
                 $prepared_actor_params = [
-                    'first_name' => $actor_data[0],
-                    'last_name' => $actor_data[1]
+                    'first_name' => strip_tags($actor_data[0]),
                 ];
+
+                if (isset($actor_data[1])) {
+                    $prepared_actor_params['last_name'] = strip_tags($actor_data[1]);
+                }
 
                 $already_actors = Actor::where($prepared_actor_params)->get();
 
@@ -77,7 +88,8 @@ final class AdminController {
             }
         }
 
-        return (new Response)->redirect('/admin/films');
+        (new Response)->with(['success' => 'Films were imported.'])
+            ->redirect('/admin/films');
     }
 
     private static function parse_import_file (string $path_to_file): array {

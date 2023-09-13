@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS Films (
     id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     since DATE NOT NULL,
-    format ENUM("VHS", "DVD", "Blu-ray") NOT NULL,
+    format VARCHAR(255) NOT NULL,
     CONSTRAINT UC_Film UNIQUE (title, since, format)
 );
 

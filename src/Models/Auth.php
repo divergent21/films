@@ -3,6 +3,7 @@
 namespace Divergent\Films\Models;
 
 use Divergent\Films\Core\Database\Model;
+use Divergent\Films\Core\Database\Query;
 
 final class Auth extends Model {
 
@@ -73,5 +74,18 @@ final class Auth extends Model {
             'name' => 'Admin',
             'email' => 'admin@films.ua'
         ];
+    }
+
+    /**
+     * Delete all rows about this session auth.
+     * 
+     * @return void
+     */
+    public static function logout (): void {
+        static::query(
+            Query::delete('Auth')
+                ->where('session_id', session_id())
+                ->build()
+        );
     }
 }

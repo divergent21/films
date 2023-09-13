@@ -19,7 +19,7 @@ final class SearchController {
         $query = $_GET['s'] ?? '';
         $films = $actors = $films_by_actors = [];
 
-        if (! empty($query) && strlen($query) > 4) {
+        if (! empty($query) && strlen($query) > 0) {
             $search_type = self::parse_search_type();
 
             if (self::SEARCH_FILMS & $search_type) {

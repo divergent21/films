@@ -9,9 +9,10 @@ use Divergent\Films\Controllers\ActorsController;
 use Divergent\Films\Controllers\AuthController;
 use Divergent\Films\Controllers\AdminController;
 use Divergent\Films\Controllers\SearchController;
+use Divergent\Films\Controllers\MainController;
 
 // Main page
-Route::get('/', [FilmsController::class, 'index'], 'main');
+Route::get('/', [MainController::class, 'index'], 'main');
 
 // Search
 Route::get('/search', [SearchController::class, 'index'], 'search');
@@ -27,7 +28,7 @@ Route::get('/actors/{id}', [ActorsController::class, 'single'], 'single_actor');
 // Auth
 Route::get('/login', [AuthController::class, 'login'], 'login');
 Route::post('/login', [AuthController::class, 'signin'], 'signin');
-Route::get('/logut', [AuthController::class, 'logout'], 'logout');
+Route::get('/logout', [AuthController::class, 'logout'], 'logout');
 
 // Admin
 Route::get('/admin', [AdminController::class, 'index'], 'admin', true);
@@ -37,6 +38,8 @@ Route::post('/admin/import_films', [AdminController::class, 'import_films_post']
 // Admin Films
 Route::get('/admin/films', [AdminFilmsController::class, 'index'], 'admin_films', true);
 Route::get('/admin/films/{id}', [AdminFilmsController::class, 'single'], 'admin_single_film', true);
+Route::get('/admin/films/create', [AdminFilmsController::class, 'new'], 'admin_create_film', true);
+Route::post('/admin/films/create', [AdminFilmsController::class, 'create'], 'admin_create_film_post', true);
 Route::post('/admin/films/save', [AdminFilmsController::class, 'save'], 'admin_film_save', true);
 Route::get('/admin/films/delete/{id}', [AdminFilmsController::class, 'delete'], 'admin_film_delete', true);
 
