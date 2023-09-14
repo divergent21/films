@@ -162,11 +162,13 @@ final class FilmsController {
         }
 
         // Insert all relative actors to the film
-        foreach ($actors as $actor_id) {
-            FilmToActor::create([
-                'actor_id' => $actor_id,
-                'film_id' => $film->id
-            ]);
+        if (isset($actors) && ! empty($actors)) {
+            foreach ($actors as $actor_id) {
+                FilmToActor::create([
+                    'actor_id' => $actor_id,
+                    'film_id' => $film->id
+                ]);
+            }
         }
 
         self::response_with_success('The films was updated.');

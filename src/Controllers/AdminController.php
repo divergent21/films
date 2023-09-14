@@ -31,8 +31,6 @@ final class AdminController {
         // check if the file is .txt
         if ($_FILES['import_file']['type'] == 'text/plain') {
             $data = self::parse_import_file($_FILES['import_file']['tmp_name']);
-        } else {
-            echo '<pre>' . print_r($_FILES['import_file'], true) . '</pre>';
         }
 
         if (
@@ -47,8 +45,14 @@ final class AdminController {
             $film_format_fixed = match (strtoupper($film_data['Format'])) {
                 'BLU-RAY' => 'Blu-ray', // to one format
                 'VHS' => 'VHS',
-                'DVD' => 'DVD'
+                'DVD' => 'DVD',
+                default => false
             };
+
+            if ($film_format_fixed === false) {
+                (new Response)->with(['error' => 'Format "' . $film_data['Format'] . '" are not available. DVD, VHS, Blu-Ray only.'])
+                    ->redirect('/admin/import_films');
+            }
 
             $prepared_film_params = [
                 'title' => strip_tags($film_data['Title']),
@@ -74,12 +78,12 @@ final class AdminController {
 
             foreach ($film_data['Stars'] as $actor_data) {
                 $prepared_actor_params = [
-                    'first_name' => strip_tags($actor_data[0]),
+                    'first_name' => htmlspecialchars($actor_data[0]),
                     'last_name' => ''
                 ];
 
                 if (isset($actor_data[1])) {
-                    $prepared_actor_params['last_name'] = strip_tags($actor_data[1]);
+                    $prepared_actor_params['last_name'] = htmlspecialchars($actor_data[1]);
                 }
 
                 // Max length

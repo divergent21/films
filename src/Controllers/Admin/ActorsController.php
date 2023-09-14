@@ -46,6 +46,8 @@ final class ActorsController {
             (new Response)->redirect('/admin/actors');
         }
 
+        $first_name = trim(htmlspecialchars($first_name));
+
         if (! empty($first_name)) {
 
             // Max length
@@ -58,6 +60,8 @@ final class ActorsController {
             (new Response)->with(['error' => 'The first name field is required'])
                 ->redirect('/admin/actors/' . $actor->id);
         }
+
+        $last_name = trim(htmlspecialchars($last_name));
 
         if (! empty($last_name)) {
             
