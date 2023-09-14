@@ -2,7 +2,7 @@
 
 <form method="POST" action="/admin/films/create" class="col-md-4 mt-4">
     <div class="form-floating mb-3">
-        <input required type="text" class="form-control" id="title" name="title" placeholder="Film title" title="Title">
+        <input required type="text" maxlength="255" class="form-control" id="title" name="title" placeholder="Film title" title="Title">
         <label for="title">Film title</label>
     </div>
 

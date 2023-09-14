@@ -37,26 +37,44 @@ final class ActorsController {
         );
     }
 
-    public static function update () {
+    public static function save () {
         extract($_POST);
 
         $actor = Actor::find($id);
 
         if ($actor === null) {
-            return (new Response)->redirect('/admin/actors');
+            (new Response)->redirect('/admin/actors');
         }
 
         if (! empty($first_name)) {
+
+            // Max length
+            if (strlen($first_name) > 255) {
+                $first_name = substr($first_name, 0, 255);
+            }
+
             $actor->first_name = $first_name;
+        } else {
+            (new Response)->with(['error' => 'The first name field is required'])
+                ->redirect('/admin/actors/' . $actor->id);
         }
 
         if (! empty($last_name)) {
+            
+            // Max length
+            if (strlen($last_name) > 255) {
+                $last_name = substr($last_name, 0, 255);
+            }
+
             $actor->last_name = $last_name;
+        } else {
+            $actor->last_name = '';
         }
 
         $actor->update();
 
-        return (new Response)->redirect('/admin/actors');
+        (new Response)->with(['success' => 'The actor was updated.'])
+            ->redirect('/admin/actors');
     }
 
     public static function delete (int $id) {
@@ -74,6 +92,7 @@ final class ActorsController {
 
         $actor->delete();
 
-        return (new Response)->redirect('/admin/actors');
+        (new Response)->with(['success' => 'The actors was deleted.'])
+            ->redirect('/admin/actors');
     }
 }

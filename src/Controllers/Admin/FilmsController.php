@@ -57,7 +57,12 @@ final class FilmsController {
 
         $fields = [];
 
-        $title = trim(strip_tags($title));
+        $title = trim(htmlspecialchars($title));
+
+        // Max length
+        if (strlen($title) > 255) {
+            $title = substr($title, 0, 255);
+        }
 
         if (! empty($title)) {
             if (! empty(Film::where(['title' => $title])->get())) {
@@ -75,7 +80,7 @@ final class FilmsController {
             self::response_with_error('The year must be number.', 'create');
         }
 
-        $format = trim(strip_tags($format));
+        $format = trim(htmlspecialchars($format));
 
         if (! empty($format)) {
             $fields['format'] = $format;
@@ -90,11 +95,13 @@ final class FilmsController {
         }
 
         // Insert all relative actors to the film
-        foreach ($actors as $actor_id) {
-            FilmToActor::create([
-                'actor_id' => $actor_id,
-                'film_id' => $film_id
-            ]);
+        if (isset($actors) && ! empty($actors)) {
+            foreach ($actors as $actor_id) {
+                FilmToActor::create([
+                    'actor_id' => $actor_id,
+                    'film_id' => $film_id
+                ]);
+            }
         }
 
         self::response_with_success('The film was created.');
@@ -110,11 +117,20 @@ final class FilmsController {
             return (new Response)->redirect('/admin/films');
         }
 
-        $title = trim(strip_tags($title));
+        $title = trim(htmlspecialchars($title));
+
+        // Max length
+        if (strlen($title) > 255) {
+            $title = substr($title, 0, 255);
+        }
         
         if (! empty($title)) {
-            if (! empty(Film::where(['title' => $title])->get())) {
-                self::response_with_error('Film with the same title is already exists.', $film->id);
+            if ($film->title != $title) {
+                $film_with_title = Film::find($title, 'title');
+
+                if ($film_with_title) {
+                    self::response_with_error('Film with the same title is already exists.', $film->id);
+                }
             }
 
             $film->title = $title;
@@ -128,7 +144,7 @@ final class FilmsController {
             self::response_with_error('The year must be number.', $film->id);
         }
 
-        $format = trim(strip_tags($format));
+        $format = trim(htmlspecialchars($format));
 
         if (! empty($format)) {
             $film->format = $format;
@@ -168,7 +184,7 @@ final class FilmsController {
 
         $film->delete();
 
-        self::response_with_success('The films was deleted.');
+        self::response_with_success('The film has been removed.');
     }
 
     private static function response_with_error (string $error, string $page = '') {
@@ -177,7 +193,7 @@ final class FilmsController {
     }
 
     private static function response_with_success (string $success) {
-        (new Response)->with(['success' => 'The films was updated.'])
+        (new Response)->with(['success' => $success])
             ->redirect('/admin/films');
     }
 }

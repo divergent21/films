@@ -23,13 +23,21 @@ final class AdminController {
 
     public static function import_films_post () {
         if (! isset($_FILES['import_file'])) {
-            return (new Response)->redirect('/admin/import_films');
+            (new Response)->redirect('/admin/import_films');
         }
 
-        $data = self::parse_import_file($_FILES['import_file']['tmp_name']);
+        $data = [];
 
-        if (empty($data)) {
-            return (new Response)->with(['error' => 'File cannot be empty.'])
+        // check if the file is .txt
+        if ($_FILES['import_file']['type'] == 'text/plain') {
+            $data = self::parse_import_file($_FILES['import_file']['tmp_name']);
+        }
+
+        if (
+            empty($data) ||
+            ! self::validate_parsed_file($data)
+        ) {
+            (new Response)->with(['error' => 'File cannot be empty.'])
                 ->redirect('/admin/import_films');
         }
 
@@ -46,6 +54,11 @@ final class AdminController {
                 'format' => $film_format_fixed
             ];
 
+            // Max length
+            if (strlen($prepared_film_params['title']) > 255) {
+                $prepared_film_params['title'] = substr($prepared_film_params['title'], 0, 255);
+            }
+
             $already_films = Film::where([
                 'title' => $prepared_film_params['title']
             ])->get();
@@ -60,10 +73,18 @@ final class AdminController {
             foreach ($film_data['Stars'] as $actor_data) {
                 $prepared_actor_params = [
                     'first_name' => strip_tags($actor_data[0]),
+                    'last_name' => ''
                 ];
 
                 if (isset($actor_data[1])) {
                     $prepared_actor_params['last_name'] = strip_tags($actor_data[1]);
+                }
+
+                // Max length
+                foreach ($prepared_actor_params as $key => $value) {
+                    if (strlen($value) > 255) {
+                        $prepared_actor_params[$key] = substr($value, 0, 255);
+                    }
                 }
 
                 $already_actors = Actor::where($prepared_actor_params)->get();
@@ -92,6 +113,31 @@ final class AdminController {
             ->redirect('/admin/films');
     }
 
+    /**
+     * Validate the parsed data from the import file.
+     * 
+     * @param array $parsed The parsed data.
+     * 
+     * @return bool True - format correct or False.
+     */
+    private static function validate_parsed_file (array $parsed): bool {
+        if (empty($parsed)) return false;
+
+        foreach ($parsed as $film_data) {
+            // check for all required fields are exist.
+            if (
+                ! isset($film_data['Title']) ||
+                ! isset($film_data['Release Year']) ||
+                ! isset($film_data['Format']) ||
+                ! isset($film_data['Starts'])
+            ) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     private static function parse_import_file (string $path_to_file): array {
         $parsed = [];
 
@@ -102,6 +148,10 @@ final class AdminController {
 
             foreach (explode("\n", $single_film_data) as $row) {
                 if (empty($row)) continue;
+
+                if (strpos($row, ':') === false) {
+                    continue;
+                }
 
                 list ($key, $value) = array_map('trim', explode(':', $row));
                 $film_data[$key] = $value;

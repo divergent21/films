@@ -4,7 +4,7 @@
     <input type="hidden" name="id" value="<?= $film->id ?>">
 
     <div class="form-floating mb-3">
-        <input required type="text" class="form-control" id="title" name="title" placeholder="Film title" title="Title" value="<?= $film->title ?>">
+        <input required type="text" maxlength="255" class="form-control" id="title" name="title" placeholder="Film title" title="Title" value="<?= $film->title ?>">
         <label for="title">Film title</label>
     </div>
 

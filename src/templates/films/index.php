@@ -16,8 +16,8 @@
                 <form action="/films" method="GET" class="row">
                     <div class="col-auto">
                         <select name="sort" class="form-control form-select mb-2">
-                            <option <?= $_GET['sort'] === 'ASC' ? 'selected' : '' ?> value="ASC">A-Z</option>
-                            <option <?= $_GET['sort'] === 'DESC' ? 'selected' : '' ?> value="DESC">Z-A</option>
+                            <option <?= $_GET['sort'] ?? '' === 'ASC' ? 'selected' : '' ?> value="ASC">A-Z</option>
+                            <option <?= $_GET['sort'] ?? '' === 'DESC' ? 'selected' : '' ?> value="DESC">Z-A</option>
                         </select>
                     </div>
                     

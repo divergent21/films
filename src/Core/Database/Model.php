@@ -276,7 +276,7 @@ abstract class Model {
                 ->from(static::table_name())
                 ->where($by, $value)
                 ->build()
-        )[0];
+        )[0] ?? [];
 
         if (empty($result)) return null;
 
