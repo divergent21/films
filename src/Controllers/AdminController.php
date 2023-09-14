@@ -31,11 +31,13 @@ final class AdminController {
         // check if the file is .txt
         if ($_FILES['import_file']['type'] == 'text/plain') {
             $data = self::parse_import_file($_FILES['import_file']['tmp_name']);
+        } else {
+            echo '<pre>' . print_r($_FILES['import_file'], true) . '</pre>';
         }
 
         if (
-            empty($data) ||
-            ! self::validate_parsed_file($data)
+            empty($data)
+            || ! self::validate_parsed_file($data)
         ) {
             (new Response)->with(['error' => 'File cannot be empty.'])
                 ->redirect('/admin/import_films');
@@ -129,7 +131,7 @@ final class AdminController {
                 ! isset($film_data['Title']) ||
                 ! isset($film_data['Release Year']) ||
                 ! isset($film_data['Format']) ||
-                ! isset($film_data['Starts'])
+                ! isset($film_data['Stars'])
             ) {
                 return false;
             }
